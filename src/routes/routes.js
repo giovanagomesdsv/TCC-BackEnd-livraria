@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router(); 
 
 const UsuariosController = require('../controllers/usuarios'); 
-const UsuariosController = require('../controllers/resenhistas'); 
-const UsuariosController = require('../controllers/titulos'); 
+const ResenhistasController = require('../controllers/resenhistas'); 
+const TitulosController = require('../controllers/titulos'); 
 
 router.get('/resenhistas', ResenhistasController.listarResenhistas); 
 router.post('/resenhistas', ResenhistasController.cadastrarResenhistas); 
