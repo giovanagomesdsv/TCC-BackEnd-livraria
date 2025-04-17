@@ -2,11 +2,21 @@ const db = require('../dataBase/connection');
 
 module.exports = {
     async listarResenhistas(request, response) {
+
+        const sql = `
+            SELECT res_id, tit_id, res_nome_fantasia, res_cidade, res_estado, res_telefone  ,  res_foto, res_perfil,res_social FROM resenhistas;
+        `;
+
+        const [rows] = await db.query(sql);
+
+        const nRegistros = rows.length;
+
         try {
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: 'Lista de resenhistas', 
-                dados: null
+                nRegistros,
+                dados: rows
             });
         } catch (error) {
             return response.status(500).json({

@@ -2,11 +2,20 @@ const db = require('../dataBase/connection');
 
 module.exports = {
     async listarTitulos(request, response) {
+
+        const sql = `
+           SELECT tit_id,tit_nome,tit_descricao,tit_icone, tit_quant_resenhas FROM titulo;
+        `;
+
+        const [rows] = await db.query(sql);
+
+        const nRegistros = rows.length;
         try {
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: 'Lista de títulos', 
-                dados: null
+                nRegistros,
+                dados: rows
             });
         } catch (error) {
             return response.status(500).json({
