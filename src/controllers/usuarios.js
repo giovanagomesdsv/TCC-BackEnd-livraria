@@ -6,7 +6,6 @@ module.exports = {
 
             const sql = `
                SELECT usu_id, usu_email, usu_nome,usu_senha,usu_tipo_usuario, usu_data_criacao,usu_status FROM usuarios;
-
             `; 
 
             const [rows] = await db.query(sql);
