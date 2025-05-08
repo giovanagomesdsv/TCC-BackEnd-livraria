@@ -28,10 +28,29 @@ module.exports = {
     }, 
     async cadastrarUsuarios(request, response) {
         try {
+            const {email, nome, senha, tipo_usuario} = request.body;
+            const sql = `INSERT INTO USUARIOS (usu_email, usu_nome, usu_senha, usu_tipo_usuario)
+                         VALUES 
+                         (?, ?, ?, ?)`;
+
+            const values = [email, nome, senha, tipo_usuario];
+
+            const [result] = await db.query(sql, values);
+
+            const dados = {
+                id: result.insertId,
+                email,
+                nome, 
+                senha, 
+                tipo_usuario
+            };
+
+
+ 
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: 'Cadastro de usuários', 
-                dados: null
+                dados: dados
             });
         } catch (error) {
             return response.status(500).json({

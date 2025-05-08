@@ -1,5 +1,4 @@
 
-
 INSERT INTO livros (livro_titulo, livro_sinopse, livro_editora, livro_isbn, livro_ano, livro_classidd, livro_foto)
 VALUES 
 
@@ -25,7 +24,7 @@ VALUES
 Passando por donos rudes e cruéis, Buck precisa lutar pela vida. À medida que aprende a se defender do porrete dos humanos e dos caninos de outros cães, ele cede a seus instintos primitivos, reconectando-se a seus antepassados.', 'Arqueiro' ,978-6555653151,2022-06-14,'12+','O chamado selvagem.jpg'),
  
 ('Caninos Brancos','Caninos brancos retrata a adaptabilidade social de uma criatura selvagem, o cachorro-lobo, e o seu progresso gradual para a civilização.','L&PM',978-8525411006
-,2022-06-14,'12+','O chamado selvagem.jpg'),
+,2022-06-14,'12+','can.jpg'),
 
 ('Diário de um Banana 1','Não é fácil ser criança. E ninguém sabe disso melhor do que Greg Heffley, que se vê mergulhado no mundo do ensino fundamental, onde fracotes são obrigados a dividir os corredores com garotos mais altos, mais malvados e que já se barbeiam. Em Diário de um Banana, o autor e ilustrados Jeff Kinney nos apresenta um herói improvável. Como Greg diz em seu diário. Só não espere que seja todo Querido Diário isso, Querido Diário aquilo. Para nossa sorte, o que Greg Heffley diz que fará e o que ele realmente faz são duas coisas bem diferentes.','VR Editora',978-8576831303
 ,2008-04-19,'10+','Diário de um Banana 1.jpg'),
@@ -60,7 +59,7 @@ VALUES( 'Verity', 'Verity Crawford é a autora best-seller por trás de uma sér
 
 
 INSERT INTO livros ( livro_titulo, livro_sinopse, livro_editora, livro_isbn, livro_ano, livro_classidd, livro_foto)
-VALUES('É assim que acaba','Lily nem sempre teve uma vida fácil, mas isso nunca a impediu de trabalhar arduamente para conquistar a vida tão sonhada. Ela percorreu um longo caminho desde a infância, em uma cidadezinha no Maine: se formou em marketing, se mudou para Boston e abriu a própria loja. Então, quando se sente atraída por um lindo neurocirurgião chamado Ryle Kincaid, tudo parece perfeito demais para ser verdade. Ryle é confiante, obstinado, quem sabe até um pouco arrogante. Mas também é sensível, brilhante e se sente atraído por Lily. Porém, sua grande aversão a relacionamentos é perturbadora. Mas quando Atlas, seu primeiro amor, reaparece de repente, Lily não consegue tirá-lo da cabeça , assim como a ligação com o passado que deixou para trás. E sobrecarregada com as questões sobre seu novo relacionamento, tudo que Lily construiu com Ryle fica em risco. Com um livro ousado e extremamente pessoal, Colleen Hoover conta uma história arrasadora, mas também inovadora. Uma narrativa inesquecível sobre um amor que custa caro demais. É assim que acaba trata de um assunto difícil com cuidado e um tremendo apanhado emocional. Os relacionamentos são retratados com honestidade e compaixão, e a nota da autora, que oferece um vislumbre da conexão pessoal de Hoover com a própria obra, é imperdível. Repleto de drama familiar e verdades dolorosas, este livro retrata de forma poderosa a devastação de relações abusivas e a força de seus sobreviventes.– Kirkus, Starred Review,', 'Galera', '978-6559812738',2023, '18+','assimqueacaba.jpeg')
+VALUES('É assim que acaba','Lily nem sempre teve uma vida fácil, mas isso nunca a impediu de trabalhar arduamente para conquistar a vida tão sonhada. Ela percorreu um longo caminho desde a infância, em uma cidadezinha no Maine: se formou em marketing, se mudou para Boston e abriu a própria loja. Então, quando se sente atraída por um lindo neurocirurgião chamado Ryle Kincaid, tudo parece perfeito demais para ser verdade. Ryle é confiante, obstinado, quem sabe até um pouco arrogante. Mas também é sensível, brilhante e se sente atraído por Lily. Porém, sua grande aversão a relacionamentos é perturbadora. Mas quando Atlas, seu primeiro amor, reaparece de repente, Lily não consegue tirá-lo da cabeça , assim como a ligação com o passado que deixou para trás. E sobrecarregada com as questões sobre seu novo relacionamento, tudo que Lily construiu com Ryle fica em risco. Com um livro ousado e extremamente pessoal, Colleen Hoover conta uma história arrasadora, mas também inovadora. Uma narrativa inesquecível sobre um amor que custa caro demais. É assim que acaba trata de um assunto difícil com cuidado e um tremendo apanhado emocional. Os relacionamentos são retratados com honestidade e compaixão, e a nota da autora, que oferece um vislumbre da conexão pessoal de Hoover com a própria obra, é imperdível. Repleto de drama familiar e verdades dolorosas, este livro retrata de forma poderosa a devastação de relações abusivas e a força de seus sobreviventes.– Kirkus, Starred Review,', 'Galera', '978-6559812738',2023, '18+','assimqueacaba.jpeg');
 
 
 INSERT INTO livros ( livro_titulo, livro_sinopse, livro_editora, livro_isbn, livro_ano, livro_classidd, livro_foto)
@@ -76,7 +75,3 @@ INSERT INTO livros ( livro_titulo, livro_sinopse, livro_editora, livro_isbn, liv
 VALUES( 'Como treinar o seu dragão', 'Neste livro estão as memórias da época em que Soluço era apenas um garoto normal. Muito normal. Nem um pouco heroico. Ele precisava desesperadamente capturar e treinar um dragão, e teria de ser o animal mais impressionante de todos. Mas tudo o que conseguiu foi uma criaturinha pequena e banguela, nada ameaçadora. Foi então que seu destino de herói começou a ser traçado.
 Inteiramente ilustrado, com muita ação e o tipo de humor que arranca gargalhadas até dos mais carrancudos, Como treinar o seu dragão é o primeiro livro de uma série que é sucesso mundial, escrita e ilustrada pela inglesa Cressida Cowell, autora premiada de obras infantis e infantojuvenis.
 ', 'Intrínseca', '978-8598078717',  2025, '10+','dragao.jpeg')
-
-SELECT * FROM LIVROS
-DELETE FROM LIVROS WHERE livro_id = 25
-
