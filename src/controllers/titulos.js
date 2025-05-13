@@ -27,7 +27,7 @@ module.exports = {
     },
     async cadastrarTitulos(request, response) {
 
-        const {nome, descricao, icone, quant_resenhas} = request.body;
+        const { nome, descricao, icone, quant_resenhas } = request.body;
 
         const sql = `INSERT INTO TITULO (tit_nome, tit_descricao, tit_icone, tit_quant_resenhas) 
 VALUES (?,?,?,?)`;
@@ -38,9 +38,9 @@ VALUES (?,?,?,?)`;
 
         const dados = {
             id: result.insertId,
-            nome, 
-            descricao, 
-            icone, 
+            nome,
+            descricao,
+            icone,
             quant_resenhas
         };
 
@@ -48,7 +48,7 @@ VALUES (?,?,?,?)`;
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Cadastro de títulos',
-                dados: dados
+                dados
             });
         } catch (error) {
             return response.status(500).json({
@@ -59,11 +59,39 @@ VALUES (?,?,?,?)`;
         }
     },
     async editarTitulos(request, response) {
+
+        const { nome, descricao, icone, quant_resenhas } = request.body;
+
+        const { id } = request.params;
+
+        const sql = `UPDATE TITULO SET tit_nome= ?, tit_descricao=?, tit_icone=?, tit_quant_resenhas=? 
+WHERE tit_id=? `;
+
+        const values = [nome, descricao, icone, quant_resenhas, id];
+
+        const [result] = await db.query(sql, values);
+
+        if (result.affectedRows === 0) {
+
+            return response.status(404).json({
+                sucesso: true,
+                mensagem: `Título ${id} não encontrado!`,
+                dados: null
+            });
+        }
+
+        const dados = {
+            id,
+            nome,
+            descricao,
+            icone,
+            quant_resenhas
+        }
         try {
             return response.status(200).json({
                 sucesso: true,
-                mensagem: 'Alteração no cadastro de título',
-                dados: null
+                mensagem: `Título ${id} atualizado com sucesso`,
+                dados
             });
         } catch (error) {
             return response.status(500).json({
@@ -75,9 +103,25 @@ VALUES (?,?,?,?)`;
     },
     async apagarTitulos(request, response) {
         try {
+
+            const {id} = request.params;
+
+            const sql = `DELETE FROM TITULOS WHERE tit_id = ?`;
+
+            const values = [id];
+
+            const [result] = await db.query(sql, values);
+
+            if (result.affectedRows === 0) {
+                return response.status(404).json({
+                    sucesso: false,
+                    mensagem: `Título ${id} não encontrado!`,
+                    dados: null
+                });
+            }
             return response.status(200).json({
                 sucesso: true,
-                mensagem: 'Exclusão de título',
+                mensagem: `Exclusão de título ${id}`,
                 dados: null
             });
         } catch (error) {
