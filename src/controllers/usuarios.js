@@ -133,4 +133,20 @@ module.exports = {
             });
         }
     },
+    async ocultarUsuario (request, response) {
+        
+        try {
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: 'excluido com sucesso' ,
+                dados: null
+            });
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    }
 };  
