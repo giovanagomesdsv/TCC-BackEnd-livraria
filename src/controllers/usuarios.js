@@ -134,8 +134,13 @@ module.exports = {
         }
     },
     async ocultarUsuario (request, response) {
-        
         try {
+
+            const ativo = 0;
+            const { id } = request.params;
+            const sql = `
+            UPDATE
+            `;
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'excluido com sucesso' ,
