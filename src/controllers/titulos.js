@@ -106,7 +106,7 @@ WHERE tit_id=? `;
 
             const {id} = request.params;
 
-            const sql = `DELETE FROM TITULOS WHERE tit_id = ?`;
+            const sql = `DELETE FROM TITULO WHERE tit_id = ?`;
 
             const values = [id];
 

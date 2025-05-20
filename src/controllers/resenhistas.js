@@ -6,7 +6,7 @@ module.exports = {
         try {
 
             const sql = `
-            SELECT res_id, tit_id, res_nome_fantasia, res_cidade, res_estado, res_telefone  ,  res_foto, res_perfil,res_social FROM resenhistas;
+            SELECT res_id, tit_id, res_nome_fantasia, res_cidade, res_estado, res_telefone,  res_foto, res_perfil,res_social FROM resenhistas WHERE res_status = 1;
         `;
 
         const [rows] = await db.query(sql);
@@ -67,14 +67,14 @@ VALUES (?,?,?,?,?,?,?,?)`;
     async editarResenhistas(request, response) {
         try {
 
-            const { nome_fantasia, cidade, estado, telefone, foto, perfil, instagram } = resquest.body;
+            const { nome_fantasia, cidade, estado, telefone, foto, perfil, instagram, status } = resquest.body;
 
             const { id } = request.params;
     
-            const sql = `UPDATE RESENHISTAS SET res_nome_fantasia=?, res_cidade=?, res_estado=?, res_telefone=?, res_foto=?, res_perfil=?, res_social=?
+            const sql = `UPDATE RESENHISTAS SET res_nome_fantasia=?, res_cidade=?, res_estado=?, res_telefone=?, res_foto=?, res_perfil=?, res_social=?, res_status=?
             WHERE res_id = ?`;
     
-            const values = [nome_fantasia, cidade, estado, telefone, foto, perfil, instagram, id];
+            const values = [nome_fantasia, cidade, estado, telefone, foto, perfil, instagram, status, id];
     
             const result = await db.query(sql, values);
     
@@ -95,7 +95,8 @@ VALUES (?,?,?,?,?,?,?,?)`;
                 telefone, 
                 foto, 
                 perfil, 
-                instagram
+                instagram,
+                status 
             }
 
             return response.status(200).json({
@@ -112,27 +113,22 @@ VALUES (?,?,?,?,?,?,?,?)`;
         }
     },
     async apagarResenhistas(request, response) {
-
         try {
-            const {id} = request.params;
-
-            const sql = `DELETE FROM RESENHISTAS WHERE res_id = ?`;
-    
+            const { id } = request.params;
+            const sql = `DELETE FROM resenhistas WHERE res_id = ?`;
             const values = [id];
-    
             const [result] = await db.query(sql, values);
     
             if (result.affectedRows === 0) {
                 return response.status(404).json({
                     sucesso: false,
-                    mensagem: `resenhista ${id} não encontrado!`,
+                    mensagem: `Resenhista ${id} não encontrado!`,
                     dados: null
                 });
             }
-
             return response.status(200).json({
                 sucesso: true,
-                mensagem: `Exclusão de resenhista ${id}`,
+                mensagem: `Resenhista ${id} excluído com sucesso.`,
                 dados: null
             });
         } catch (error) {
@@ -142,5 +138,36 @@ VALUES (?,?,?,?,?,?,?,?)`;
                 dados: error.message
             });
         }
-    },
+    },    
+    async ocultarResenhistas(request, response) {
+        try {
+            const { id } = request.params;
+            const inativo = 0;
+    
+            const sql = `UPDATE resenhistas SET res_status = ? WHERE res_id = ?`;
+            const values = [inativo, id];
+    
+            const [result] = await db.query(sql, values);
+    
+            if (result.affectedRows === 0) {
+                return response.status(404).json({
+                    sucesso: false,
+                    mensagem: `Resenhista ${id} não encontrado!`,
+                    dados: null
+                });
+            }
+    
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: `Resenhista ${id} ocultado com sucesso.`,
+                dados: null
+            });
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    }
 };  
