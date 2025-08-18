@@ -14,7 +14,8 @@ router.delete('/resenhistas/del/:id', ResenhistasController.ocultarResenhistas);
 router.get('/usuarios', UsuariosController.listarUsuarios); 
 router.post('/usuarios', UsuariosController.cadastrarUsuarios); 
 router.patch('/usuarios/:id', UsuariosController.editarUsuarios); 
-router.delete('/usuarios/:id', UsuariosController.apagarUsuarios); 
+router.delete('/usuarios/:id', UsuariosController.apagarUsuarios);
+router.get('/login', UsuariosController.login); //query
 
 // NOVA ROTA: Exclusão lógica (ocultar usuário)
 router.delete('/usuarios/del/:id', UsuariosController.ocultarUsuario);
