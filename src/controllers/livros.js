@@ -137,6 +137,48 @@ module.exports = {
                 dados: error.message
             });
         }
+
+        
     },
+
+    async listarLivrosComParâmetros(request, response) {
+        try {
+            const { nome } = request.query;
+
+            const livro_titulo = nome ? `%${nome}%` : '%';
+            const sql = `
+            SELECT
+                livro_titulo,
+                livro_sinopse, 
+                livro_editora, 
+                livro_isbn, 
+                livro_ano, 
+                livro_classidd, 
+                livro_foto
+            FROM
+                livros
+            WHERE
+                livro_titulo like ?;
+            `;
+
+            const values = [livro_titulo];
+
+            const [rows] = await db.query(sql, values);
+            const nItens = rows.length;
+
+            return response.status(200).json({
+            sucesso: true,
+            mensagem: 'Lista de Livros.',
+            nItens,
+            dados: rows
+            });
+        } catch (error) {
+            return response.status(500).json({
+            sucesso: false,
+            mensagem: 'Erro na requisição.',
+            dados: error.message
+            });
+        }
+    }
 };
 
