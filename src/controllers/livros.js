@@ -25,7 +25,7 @@ module.exports = {
                 sucesso: true,
                 mensagem: 'Lista de livros',
                 nRegistros,
-                dados: rows
+                dados: dados
             });
         } catch (error) {
             return response.status(500).json({
