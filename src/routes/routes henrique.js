@@ -10,6 +10,7 @@ const uploadImage = require('../../middleware/uploadHelper');
 const uploadLivros = uploadImage('livros')
 
 router.get('/livros', LivrosController.listarLivros); 
+router.get('/livros/pesq', LivrosController.listarLivrosComParâmetros); 
 router.post('/livros', uploadLivros.single('img'), LivrosController.cadastrarLivros); 
 router.patch('/livros/:id', LivrosController.editarLivros); 
 router.delete('/livros/:id', LivrosController.apagarLivros);

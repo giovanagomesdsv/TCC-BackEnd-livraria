@@ -6,17 +6,55 @@ const { gerarUrl } = require('../../utils/gerarUrl');
 module.exports = {
     async listarLivros(request, response) {
         try {
+            // Parâmetros opcionais para filtro
+            const { genero, autor, livraria } = request.query;
 
-            const sql = `
-                SELECT livro_titulo, livro_sinopse, livro_editora, livro_isbn, livro_ano, livro_classidd, livro_foto
-                FROM livros;
-                        `;
+            let sql = `
+                SELECT l.livro_id, l.livro_titulo, l.livro_sinopse, l.livro_editora, l.livro_isbn, l.livro_ano, l.livro_classidd, l.livro_foto
+                FROM livros l
+            `;
+            let joins = '';
+            let wheres = [];
+            let values = [];
 
-            const [rows] = await db.query(sql);
+            if (genero) {
+                joins += ' INNER JOIN LIVRO_GENEROS lg ON l.livro_id = lg.livro_id INNER JOIN GENEROS g ON lg.gen_id = g.gen_id';
+                wheres.push('g.gen_nome LIKE ?');
+                values.push(`%${genero}%`);
+            }
+            if (autor) {
+                joins += ' INNER JOIN LIVRO_AUTORES la ON l.livro_id = la.livro_id INNER JOIN AUTORES a ON la.aut_id = a.aut_id';
+                wheres.push('a.aut_nome LIKE ?');
+                values.push(`%${autor}%`);
+            }
+            if (livraria) {
+                joins += ' INNER JOIN LIVRARIAS_LIVROS ll ON l.livro_id = ll.livro_id INNER JOIN LIVRARIAS lv ON ll.liv_id = lv.liv_id';
+                wheres.push('lv.liv_nome LIKE ?');
+                values.push(`%${livraria}%`);
+            }
+
+            sql += joins;
+            if (wheres.length > 0) {
+                sql += ' WHERE ' + wheres.join(' AND ');
+            }
+            sql += ';';
+
+            const [rows] = await db.query(sql, values);
             const nRegistros = rows.length;
 
-            const dados = rows.map( livros => ({
-                id: livros.livros_id,
+            // Se algum filtro foi passado e não há correspondência, retorna vazio
+            if ((genero || autor || livraria) && nRegistros === 0) {
+                return response.status(200).json({
+                    sucesso: true,
+                    mensagem: 'Nenhum livro encontrado para o filtro informado.',
+                    nRegistros: 0,
+                    dados: []
+                });
+            }
+
+            // Retorna os livros encontrados (com ou sem filtro)
+            const dados = rows.map(livros => ({
+                id: livros.livro_id,
                 nome: livros.livro_titulo,
                 img: gerarUrl(livros.livro_foto, 'livros', 'sem.svg')
             }));
