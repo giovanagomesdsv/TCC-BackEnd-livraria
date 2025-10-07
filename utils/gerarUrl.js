@@ -29,7 +29,7 @@ function gerarUrl(nomeArquivo, pasta, arquivoPadrao)
     let caminhoRelativo;
 
     // Se um nome de arquivo foi fornecido e ele existe...
-    if (nomeArquivo && fse.existSync(caminhoFisico)) {
+    if (nomeArquivo && fse.existsSync(caminhoFisico)) {
         // ...usa o caminho para esse arquivo.
         caminhoRelativo = path.join('/public', pasta, nomeArquivo);
     } else {
