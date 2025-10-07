@@ -1,5 +1,8 @@
 const db = require('../dataBase/connection');
 
+const { gerarUrl } = require('../../utils/gerarUrl');
+
+
 module.exports = {
     async listarLivros(request, response) {
         try {
@@ -10,14 +13,19 @@ module.exports = {
                         `;
 
             const [rows] = await db.query(sql);
-
             const nRegistros = rows.length;
+
+            const dados = rows.map( livros => ({
+                id: livros.livros_id,
+                nome: livros.livro_titulo,
+                img: gerarUrl(livros.livro_foto, 'livros', 'sem.svg')
+            }));
 
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Lista de livros',
                 nRegistros,
-                dados: rows
+                dados: dados
             });
         } catch (error) {
             return response.status(500).json({
@@ -31,13 +39,14 @@ module.exports = {
         try {
 
             const { livro_titulo, livro_sinopse, livro_editora, livro_isbn, livro_ano, livro_classidd, livro_foto } = request.body;
+            const imagem = request.file;
 
             const sql = `
                 INSERT INTO Livros (livro_titulo, livro_sinopse, livro_editora, livro_isbn, livro_ano, livro_classidd, livro_foto)
                 VALUES (?,?,?,?,?,?,?)`;
 
 
-            const values = [livro_titulo, livro_sinopse, livro_editora, livro_isbn, livro_ano, livro_classidd, livro_foto];
+            const values = [livro_titulo, livro_sinopse, livro_editora, livro_isbn, livro_ano, livro_classidd, imagem.livro_foto];
 
             const [result] = await db.query(sql, values);
 
