@@ -84,20 +84,27 @@ module.exports = {
                 VALUES (?,?,?,?,?,?,?)`;
 
 
-            const values = [livro_titulo, livro_sinopse, livro_editora, livro_isbn, livro_ano, livro_classidd, imagem.livro_foto];
+            const values = [
+            livro_titulo,
+            livro_sinopse,
+            livro_editora,
+            livro_isbn,
+            livro_ano,
+            livro_classidd,
+            imagem ? imagem.filename : 'sem.svg'
+            ];
 
             const [result] = await db.query(sql, values);
 
             const dados = {
-                id: result.insertId,
-                livro_titulo,
-                livro_sinopse, 
-                livro_editora, 
-                livro_isbn, 
-                livro_ano, 
-                livro_classidd, 
-                livro_foto,
-
+            id: result.insertId,
+            livro_titulo,
+            livro_sinopse,
+            livro_editora,
+            livro_isbn,
+            livro_ano,
+            livro_classidd,
+            livro_foto: imagem ? imagem.filename : 'sem.svg',
             };
 
             return response.status(200).json({
@@ -224,6 +231,55 @@ module.exports = {
             sucesso: false,
             mensagem: 'Erro na requisição.',
             dados: error.message
+            });
+        }
+    },
+
+    async listarLivrosAvaliados(request, response) {
+        try {
+            const { limit } = request.query;
+
+            let sql = `
+                SELECT
+                    l.livro_id,
+                    l.livro_titulo,
+                    l.livro_foto,
+                    COUNT(r.resenha_id) AS nAvaliacoes,
+                    ROUND(AVG(r.resenha_avaliacao),2) AS mediaAvaliacao
+                FROM livros l
+                JOIN resenhas r ON l.livro_id = r.livro_id
+                GROUP BY l.livro_id, l.livro_titulo, l.livro_foto
+                HAVING COUNT(r.resenha_id) > 0
+                ORDER BY nAvaliacoes DESC
+            `;
+
+            const values = [];
+            if (limit && Number(limit) > 0) {
+                sql += ' LIMIT ?';
+                values.push(Number(limit));
+            }
+
+            const [rows] = await db.query(sql, values);
+
+            const dados = rows.map(row => ({
+                id: row.livro_id,
+                nome: row.livro_titulo,
+                img: gerarUrl(row.livro_foto, 'livros', 'sem.svg'),
+                nAvaliacoes: row.nAvaliacoes,
+                mediaAvaliacao: row.mediaAvaliacao
+            }));
+
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: 'Livros mais avaliados',
+                nRegistros: dados.length,
+                dados
+            });
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
             });
         }
     }
