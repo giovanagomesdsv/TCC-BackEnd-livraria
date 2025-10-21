@@ -218,13 +218,26 @@ module.exports = {
             const values = [livro_titulo];
 
             const [rows] = await db.query(sql, values);
+
+            const dados = rows.map(row => ({
+                id: row.livro_id,
+                nome: row.livro_titulo,
+                sinopse: row.livro_sinopse, 
+                editora: row.livro_editora, 
+                isbn: row.livro_isbn, 
+                ano: row.livro_ano, 
+                classif_idade: row.livro_classidd, 
+                
+                img: gerarUrl(row.livro_foto, 'livros', 'sem.svg'),
+            }));
+
             const nItens = rows.length;
 
             return response.status(200).json({
             sucesso: true,
             mensagem: 'Lista de Livros.',
             nItens,
-            dados: rows
+            dados: dados
             });
         } catch (error) {
             return response.status(500).json({
