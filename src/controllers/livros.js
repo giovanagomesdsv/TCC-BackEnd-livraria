@@ -1,4 +1,6 @@
 const db = require('../dataBase/connection');
+const fs = require('fs');
+const path = require('path');
 
 const { gerarUrl } = require('../../utils/gerarUrl');
 
@@ -79,32 +81,70 @@ module.exports = {
             const { livro_titulo, livro_sinopse, livro_editora, livro_isbn, livro_ano, livro_classidd, livro_foto } = request.body;
             const imagem = request.file;
 
+            // tenta determinar o filename real a salvar no DB
+            let filename = null;
+
+            if (imagem && imagem.filename) {
+                filename = imagem.filename;
+            }
+
+            // se veio um valor livro_foto no body e existir no disco, usa ele
+            if (!filename && livro_foto) {
+                const candidate = path.join(process.cwd(), 'public', 'livros', livro_foto);
+                if (fs.existsSync(candidate)) {
+                    filename = livro_foto;
+                }
+            }
+
+            // tentativa inteligente: procurar arquivo em public/livros com nome parecido ao título
+            if (!filename && livro_titulo) {
+                try {
+                    const folder = path.join(process.cwd(), 'public', 'livros');
+                    if (fs.existsSync(folder)) {
+                        const files = fs.readdirSync(folder);
+                        const normalize = s => (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '').replace(/[^a-z0-9\.\-\_]/g, '');
+                        const titleNorm = normalize(livro_titulo.replace(/\.[^.]+$/, ''));
+                        for (const f of files) {
+                            const fNoExt = f.replace(/\.[^.]+$/, '');
+                            if (normalize(fNoExt) === titleNorm) {
+                                filename = f;
+                                break;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    // ignore and fallback to default
+                }
+            }
+
+            // default
+            if (!filename) filename = 'sem.svg';
+
             const sql = `
                 INSERT INTO Livros (livro_titulo, livro_sinopse, livro_editora, livro_isbn, livro_ano, livro_classidd, livro_foto)
                 VALUES (?,?,?,?,?,?,?)`;
 
-
             const values = [
-            livro_titulo,
-            livro_sinopse,
-            livro_editora,
-            livro_isbn,
-            livro_ano,
-            livro_classidd,
-            imagem ? imagem.filename : 'sem.svg'
+                livro_titulo,
+                livro_sinopse,
+                livro_editora,
+                livro_isbn,
+                livro_ano,
+                livro_classidd,
+                filename
             ];
 
             const [result] = await db.query(sql, values);
 
             const dados = {
-            id: result.insertId,
-            livro_titulo,
-            livro_sinopse,
-            livro_editora,
-            livro_isbn,
-            livro_ano,
-            livro_classidd,
-            livro_foto: imagem ? imagem.filename : 'sem.svg',
+                id: result.insertId,
+                livro_titulo,
+                livro_sinopse,
+                livro_editora,
+                livro_isbn,
+                livro_ano,
+                livro_classidd,
+                livro_foto: filename,
             };
 
             return response.status(200).json({
@@ -227,7 +267,6 @@ module.exports = {
                 isbn: row.livro_isbn, 
                 ano: row.livro_ano, 
                 classif_idade: row.livro_classidd, 
-                
                 img: gerarUrl(row.livro_foto, 'livros', 'sem.svg'),
             }));
 
